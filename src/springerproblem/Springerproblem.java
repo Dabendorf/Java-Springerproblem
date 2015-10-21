@@ -22,8 +22,7 @@ public class Springerproblem {
 	
 	private void naechsteReihe(Schachbrett sb) {
 		a++;
-		
-		System.out.println("Runde: "+sb.getZaehler());
+		System.out.println("Runde: "+sb.getZaehler()+" ");
 		if(sb.getLastPosition(true)-2>=0 && sb.getLastPosition(false)-1>=0) {
 			if(!sb.belegt(sb.getLastPosition(true)-2, sb.getLastPosition(false)-1)) {
 				Schachbrett sb1 = sb.clone();
