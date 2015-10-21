@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Springerproblem {
 	
 	private static int breite=8, laenge=8;
-	private ArrayList<Schachbrett> geschlossen = new ArrayList<Schachbrett>();
-	private ArrayList<Schachbrett> offen = new ArrayList<Schachbrett>();
+	//private ArrayList<Schachbrett> geschlossen = new ArrayList<Schachbrett>();
+	//private ArrayList<Schachbrett> offen = new ArrayList<Schachbrett>();
 	private int a = 0;
 
 	public Springerproblem() {
