@@ -15,6 +15,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+/**
+ * http://forum.byte-welt.net/java-forum-das-java-welt-kompetenz-zentrum-wir-wissen-und-helfen-/allgemeine-themen/17566-clonen-funktioniert-nicht.html#post124881
+ * https://www.hackerboard.de/programmieraufgaben/16975-springerproblem.html
+ * http://www.axel-conrad.de/springer/springer.html
+ * https://de.wikipedia.org/wiki/Springerproblem#Warnsdorffregel
+ * http://www.zaik.uni-koeln.de/AFS/teachings/ss07/InfoSeminar/handout/sascha_baumanns_knighttours.pdf
+ * @author lukasschramm
+ *
+ */
 public class Springerproblem implements ActionListener {
 	
 	private JFrame frame1 = new JFrame("Springerproblem");
