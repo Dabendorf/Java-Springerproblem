@@ -1,127 +1,104 @@
 package springerproblem;
 
-import java.util.ArrayList;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Springerproblem {
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
+public class Springerproblem implements ActionListener {
 	
-	private static int breite=8, laenge=8;
-	private ArrayList<Schachbrett> geschlossen = new ArrayList<Schachbrett>();
-	private ArrayList<Schachbrett> offen = new ArrayList<Schachbrett>();
-	private int a = 0;
+	private JFrame frame1 = new JFrame("Springerproblem");
+	private static int a = 5;
+	private static JLabel[][] feld   = new JLabel[a][a];
+    static int position[][] = new int[a][a];
+    private JPanel brett = new JPanel();
+    private JTextField coords = new JTextField("x,y",8);
+    private JLabel info = new JLabel("Starkoordinaten (von 0,0 bis "+(a-1)+","+(a-1)+"):");
+    private JButton start = new JButton("Berechnen");
+    
+    public Springerproblem() {
+    	frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame1.setPreferredSize(new Dimension(350,350));
+		frame1.setResizable(false);
+		Container cp = frame1.getContentPane();
+		cp.setLayout(new FlowLayout(FlowLayout.LEFT,50,20));
+		cp.add(brett);
+        cp.add(info);
+        cp.add(coords);
+        cp.add(start);
+        brett.setLayout(new GridLayout(a,a));
+        brett.setPreferredSize(new Dimension(200,200));
+        info.setPreferredSize(new Dimension(350,13));
+        start.addActionListener(this);
+        
+        for(int y=0; y<a; y++) {
+        	for(int x=0; x<a; x++) {
+        		feld[x][y] = new JLabel(" ",JLabel.CENTER);
+                feld[x][y].setBorder(new LineBorder(Color.black,1));
+                brett.add(feld[x][y]);
+                feld[x][y].setOpaque(true);
+                feld[x][y].setBackground(Color.lightGray);
+                position[x][y] = 0;
+        	}
+        }
+		frame1.pack();
+		frame1.setLocationRelativeTo(null);
+		frame1.setVisible(true);                                  
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+        for(int x=0; x<a; x++) {
+        	for(int y=0; y<a; y++) {
+        		feld[x][y].setText("");
+        	}
+        }
+        for(int i=0; i<a*a; i++) {
+            Algorithmus.xWeg[i]=0;
+            Algorithmus.yWeg[i]=0;           
+        }
+        Algorithmus.first = true;
+        int x, y;
+        String s;
+        s = String.valueOf(coords.getText().charAt(0));
+        x = Integer.parseInt(s);
+        s = String.valueOf(coords.getText().charAt(2));
+        y = Integer.parseInt(s);
 
-	public Springerproblem() {
-		for(int a=0;a<breite;a++) {
-			for(int b=0;b<laenge;b++) {
-				Schachbrett sb = new Schachbrett();
-				sb.spielzug(a,b);
-				naechsteReihe(sb);
-			}
-		}
-		System.out.println(a);
-	}
-	
-	private void naechsteReihe(Schachbrett sb) {
-		a++;
-		System.out.println("Runde: "+sb.getZaehler()+" ");
-		if(sb.getLastPosition(true)-2>=0 && sb.getLastPosition(false)-1>=0) {
-			if(!sb.belegt(sb.getLastPosition(true)-2, sb.getLastPosition(false)-1)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)-2,sb1.getLastPosition(false)-1);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-		if(sb.getLastPosition(true)-2>=0 && sb.getLastPosition(false)+1<laenge) {
-			if(!sb.belegt(sb.getLastPosition(true)-2, sb.getLastPosition(false)+1)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)-2,sb1.getLastPosition(false)+1);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-		if(sb.getLastPosition(true)+2<breite && sb.getLastPosition(false)-1>=0) {
-			if(!sb.belegt(sb.getLastPosition(true)+2, sb.getLastPosition(false)-1)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)+2,sb1.getLastPosition(false)-1);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-		if(sb.getLastPosition(true)+2<breite && sb.getLastPosition(false)+1<laenge) {
-			if(!sb.belegt(sb.getLastPosition(true)+2, sb.getLastPosition(false)+1)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)+2,sb1.getLastPosition(false)+1);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-		if(sb.getLastPosition(true)-1>=0 && sb.getLastPosition(false)-2>=0) {
-			if(!sb.belegt(sb.getLastPosition(true)-1, sb.getLastPosition(false)-2)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)-1,sb1.getLastPosition(false)-2);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-		if(sb.getLastPosition(true)-1>=0 && sb.getLastPosition(false)+2<laenge) {
-			if(!sb.belegt(sb.getLastPosition(true)-1, sb.getLastPosition(false)+2)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)-1,sb1.getLastPosition(false)+2);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-		if(sb.getLastPosition(true)+1<breite && sb.getLastPosition(false)-2>=0) {
-			if(!sb.belegt(sb.getLastPosition(true)+1, sb.getLastPosition(false)-2)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)+1,sb1.getLastPosition(false)-2);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-		if(sb.getLastPosition(true)+1<breite && sb.getLastPosition(false)+2<laenge) {
-			if(!sb.belegt(sb.getLastPosition(true)+1, sb.getLastPosition(false)+2)) {
-				Schachbrett sb1 = sb.clone();
-				if(sb1.getZaehler()<breite*laenge) {
-					sb1.spielzug(sb1.getLastPosition(true)+1,sb1.getLastPosition(false)+2);
-					naechsteReihe(sb1);
-				} else if(sb1.getZaehler()==breite*laenge) {
-					System.out.println(sb1.toString());
-				}
-			}
-		}
-	}
-	
-	public static void main(String[] args) {
-		new Springerproblem();
-	}
-
-	public static int getBreite() {
-		return breite;
-	}
-
-	public static int getLaenge() {
-		return laenge;
-	}
+        if(Algorithmus.solve(x,y,1)) {
+        	for(int i=0; i<a*a; i++) {
+        		feld[Algorithmus.xWeg[i]][Algorithmus.yWeg[i]].setText(""+i);
+        	}
+        	for(int i=0; i<a; i++) {
+        		for(int j=0; j<a; j++) {
+        			if(feld[i][j].getText().equals("")) {
+        				feld[i][j].setText(String.valueOf(a*a));
+        			}
+                    if(feld[i][j].getText().equals("1")||feld[i][j].getText().equals(String.valueOf(a*a))) {
+                    	feld[i][j].setForeground(Color.blue);
+                    }  
+        		}
+        	}         
+        } else {
+        	coords.setText("Keine Lösung");
+        }
+        for(int i=0; i<a; i++) {
+        	for(int j=0; j<a; j++) {
+        		position[i][j]=0;
+        	}     
+        }    
+    }
+    
+    public static void main(String[] args) {
+    	new Springerproblem();
+    }   
 }
