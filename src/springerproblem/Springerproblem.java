@@ -15,18 +15,28 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+/**
+ * Dies ist die Grafikklasse, welche die Loesung des Springerproblems darstellt.
+ * 
+ * @author Lukas Schramm
+ * @version 1.0
+ *
+ */
 public class Springerproblem implements ActionListener {
 	
+	/**JFrame, auf dem alles dargestellt wird*/
 	private JFrame frame1 = new JFrame("Springerproblem");
-	private int a = 8, b = 10;
+	/**Groesse des Feldes in a*b*/
+	private int a = 8, b = 8;
+	/**JLabel-2DArray zur Darstellung der Spielzuege*/
 	private JLabel[][] feld = new JLabel[a][b];
-	//private static int a = 8, b = 8;
-	//private static JLabel[][] feld   = new JLabel[a][b];
-    //static int position[][] = new int[a][b];
+	/**Schachbrett mit Feldern*/
     private JPanel brett = new JPanel();
+    /**Textfeld zur Eingabe des Startfeldes*/
     private JTextField coords = new JTextField("x,y",8);
-    
+    /**Label zur Information*/
     private JLabel info = new JLabel("Startkoordinaten (von 1,1 bis "+(a)+","+(b)+"):");
+    /**Button zum Start des Programms*/
     private JButton start = new JButton("Berechnen");
     
     public Springerproblem() {
@@ -39,7 +49,7 @@ public class Springerproblem implements ActionListener {
         cp.add(info);
         cp.add(coords);
         cp.add(start);
-        brett.setLayout(new GridLayout(a,b));
+        brett.setLayout(new GridLayout(b,a));
         brett.setPreferredSize(new Dimension(200,200));
         info.setPreferredSize(new Dimension(350,13));
         start.addActionListener(this);
@@ -58,6 +68,9 @@ public class Springerproblem implements ActionListener {
 		frame1.setVisible(true);                                  
     }
     
+    /**
+     * Diese Methode liest das Startfeld ein und stellt die Loesung auf dem Spielbrett dar.
+     */
     public void actionPerformed(ActionEvent e) {
     	for(int x=0; x<a; x++) {
         	for(int y=0; y<b; y++) {
@@ -68,18 +81,22 @@ public class Springerproblem implements ActionListener {
     	Algorithmus alg = new Algorithmus(a,b);
     	int x, y;
         String s;
-        s = String.valueOf(coords.getText().charAt(0));
-        x = Integer.parseInt(s)-1;
-        s = String.valueOf(coords.getText().charAt(2));
-        y = Integer.parseInt(s)-1;
-        
-        alg.solve(x,y,1);
-        for(int i=0; i<a; i++) {
-    		for(int j=0; j<b; j++) {
-    			feld[i][j].setText(String.valueOf(alg.get(i,j)));
-    		}
-    	}
-        frame1.repaint();
+        try {
+        	s = String.valueOf(coords.getText().charAt(0));
+            x = Integer.parseInt(s)-1;
+            s = String.valueOf(coords.getText().charAt(2));
+            y = Integer.parseInt(s)-1;
+            
+            alg.solve(x,y,1);
+            for(int i=0; i<a; i++) {
+        		for(int j=0; j<b; j++) {
+        			feld[i][j].setText(String.valueOf(alg.get(i,j)));
+        		}
+        	}
+            frame1.repaint();
+        } catch(Exception nfe) {
+        	coords.setText("x,y");
+        }
     }
     
     public static void main(String[] args) {

@@ -19,9 +19,11 @@ import java.util.Map;
  */
 public class Algorithmus {
 	
-	private int sizeX;
-    private final int sizeY;
+	/**Groesse des Feldes in sizeX*sizeY*/
+	private final int sizeX, sizeY;
+	/**Das Spielfeld aus Feldern*/
     private final int board[];
+    /**Dies ist die Liste an Zuegen, die ein Springer auf einem Schachbrett ausfuehren kann*/
     private final Point deltas[] = {
         new Point(-1,  2),
         new Point( 1,  2),
@@ -39,18 +41,42 @@ public class Algorithmus {
         this.board = new int[sizeX*sizeY];
     }
    
+    /**
+     * Diese Methode gibt die Zugnummer aus, mit welcher das Feld beruehrt wird.
+     * @param x Die x-Koordinate des Felds.
+     * @param y Die y-Koordinate des Felds.
+     * @return Gibt die Zugnummer zurueck.
+     */
     public int get(int x, int y) {
         return board[x+y*sizeX];
     }
-   
+    
+    /**
+     * Diese Methode setzt die Zugnummer fest, mit welcher das Feld beruehrt wird.
+     * @param x Die x-Koordinate des Felds.
+     * @param y Die y-Koordinate des Felds.
+     * @param n Legt die Zugnummer fest.
+     */
     private void set(int x, int y, int n) {
         board[x+y*sizeX] = n;
     }
-   
+    
+    /**
+     * Diese Methode ueberprueft, ob das Feld gueltig ist.
+     * @param x Die x-Koordinate des Felds.
+     * @param y Die y-Koordinate des Felds.
+     * @return Gibt einen Boolean zurueck.
+     */
     private boolean isValid(int x, int y) {
         return x >= 0 && x < sizeX && y >= 0 && y < sizeY;
     }
-   
+    
+    /**
+     * Diese Methode generiert ausgehend von einem Feld die acht anderen Felder, den der Springer besuchen koennte.
+     * @param x Die x-Koordinate des Felds.
+     * @param y Die y-Koordinate des Felds.
+     * @return Gibt eine Liste an Punkten zurueck.
+     */
     private List<Point> computeTargets(int x, int y) {
         List<Point> targets = new ArrayList<Point>();
         for(Point delta : deltas) {
@@ -62,18 +88,20 @@ public class Algorithmus {
         }
         return targets;
     }
-   
+    
+    /**
+     * Diese Methode fuehrt jeden einzelnen Schritt aus und gibt zurueck, ob das Brett komplett geloest ist.
+     * @param currentX Die x-Koordinate des Felds.
+     * @param currentY Die y-Koordinate des Felds.
+     * @param step Die Nummer des Spielzugs.
+     * @return Gibt Boolean zurueck, ob das Springerproblem geloest wurde.
+     */
     public boolean solve(int currentX, int currentY, int step) {
-        if (step == sizeX * sizeY) {
+        if(step == sizeX * sizeY) {
             set(currentX, currentY, step);
-            System.out.println("After step "+step);
-            print();
             return true;
         }
         set(currentX, currentY, step);
-       
-        System.out.println("After step "+step);
-        print();
        
         List<Point> targets = computeTargets(currentX, currentY);
        
@@ -89,6 +117,11 @@ public class Algorithmus {
         return false;
     }
    
+    /**
+     * Diese Methode fuehrt die Warnsdorffregel aus, nach welcher das Feld besucht werden sollte,
+     * von welchem man die wenigsten anderen Felder besuchen kann.
+     * @param targets Die Liste an Punkten.
+     */
     private void applyWarnsdorffRule(List<Point> targets) {
         Map<Point, Integer> targetCounters = new HashMap<Point, Integer>();
         for(Point target : targets) {
@@ -104,30 +137,4 @@ public class Algorithmus {
             }
         });
     }
-   
-   
-    private void print() {
-        StringBuilder sb = new StringBuilder();
-        for(int y=0; y<sizeY; y++) {
-            for(int x=0; x<sizeX; x++) {
-                int v = get(x,y);
-                if(v == 0) {
-                    sb.append(" .. ");
-                } else {
-                    sb.append(String.format(" %2d ", v));
-                }
-            }
-            sb.append("\n");
-        }
-        System.out.println(sb.toString());
-    }
-
-	public int[] getBoard() {
-		return board;
-	}
-    
-    /*public static void main(String[] args) {
-    	Algorithmus k = new Algorithmus(12, 12);
-        k.solve(4,4,1);
-    }*/
 }
