@@ -15,24 +15,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-/**
- * http://forum.byte-welt.net/java-forum-das-java-welt-kompetenz-zentrum-wir-wissen-und-helfen-/allgemeine-themen/17566-clonen-funktioniert-nicht.html#post124881
- * https://www.hackerboard.de/programmieraufgaben/16975-springerproblem.html
- * http://www.axel-conrad.de/springer/springer.html
- * https://de.wikipedia.org/wiki/Springerproblem#Warnsdorffregel
- * http://www.zaik.uni-koeln.de/AFS/teachings/ss07/InfoSeminar/handout/sascha_baumanns_knighttours.pdf
- * @author lukasschramm
- *
- */
 public class Springerproblem implements ActionListener {
 	
 	private JFrame frame1 = new JFrame("Springerproblem");
-	private static int a = 5;
-	private static JLabel[][] feld   = new JLabel[a][a];
-    static int position[][] = new int[a][a];
+	private int a = 8, b = 10;
+	private JLabel[][] feld = new JLabel[a][b];
+	//private static int a = 8, b = 8;
+	//private static JLabel[][] feld   = new JLabel[a][b];
+    //static int position[][] = new int[a][b];
     private JPanel brett = new JPanel();
     private JTextField coords = new JTextField("x,y",8);
-    private JLabel info = new JLabel("Starkoordinaten (von 0,0 bis "+(a-1)+","+(a-1)+"):");
+    
+    private JLabel info = new JLabel("Startkoordinaten (von 1,1 bis "+(a)+","+(b)+"):");
     private JButton start = new JButton("Berechnen");
     
     public Springerproblem() {
@@ -45,19 +39,18 @@ public class Springerproblem implements ActionListener {
         cp.add(info);
         cp.add(coords);
         cp.add(start);
-        brett.setLayout(new GridLayout(a,a));
+        brett.setLayout(new GridLayout(a,b));
         brett.setPreferredSize(new Dimension(200,200));
         info.setPreferredSize(new Dimension(350,13));
         start.addActionListener(this);
         
-        for(int y=0; y<a; y++) {
+        for(int y=0; y<b; y++) {
         	for(int x=0; x<a; x++) {
         		feld[x][y] = new JLabel(" ",JLabel.CENTER);
                 feld[x][y].setBorder(new LineBorder(Color.black,1));
                 brett.add(feld[x][y]);
                 feld[x][y].setOpaque(true);
                 feld[x][y].setBackground(Color.lightGray);
-                position[x][y] = 0;
         	}
         }
 		frame1.pack();
@@ -66,45 +59,27 @@ public class Springerproblem implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent e) {
-        for(int x=0; x<a; x++) {
-        	for(int y=0; y<a; y++) {
+    	for(int x=0; x<a; x++) {
+        	for(int y=0; y<b; y++) {
         		feld[x][y].setText("");
         	}
         }
-        for(int i=0; i<a*a; i++) {
-            Algorithmus.xWeg[i]=0;
-            Algorithmus.yWeg[i]=0;           
-        }
-        Algorithmus.first = true;
-        int x, y;
+    	
+    	Algorithmus alg = new Algorithmus(a,b);
+    	int x, y;
         String s;
         s = String.valueOf(coords.getText().charAt(0));
-        x = Integer.parseInt(s);
+        x = Integer.parseInt(s)-1;
         s = String.valueOf(coords.getText().charAt(2));
-        y = Integer.parseInt(s);
-
-        if(Algorithmus.solve(x,y,1)) {
-        	for(int i=0; i<a*a; i++) {
-        		feld[Algorithmus.xWeg[i]][Algorithmus.yWeg[i]].setText(""+i);
-        	}
-        	for(int i=0; i<a; i++) {
-        		for(int j=0; j<a; j++) {
-        			if(feld[i][j].getText().equals("")) {
-        				feld[i][j].setText(String.valueOf(a*a));
-        			}
-                    if(feld[i][j].getText().equals("1")||feld[i][j].getText().equals(String.valueOf(a*a))) {
-                    	feld[i][j].setForeground(Color.blue);
-                    }  
-        		}
-        	}         
-        } else {
-        	coords.setText("Keine Lösung");
-        }
+        y = Integer.parseInt(s)-1;
+        
+        alg.solve(x,y,1);
         for(int i=0; i<a; i++) {
-        	for(int j=0; j<a; j++) {
-        		position[i][j]=0;
-        	}     
-        }    
+    		for(int j=0; j<b; j++) {
+    			feld[i][j].setText(String.valueOf(alg.get(i,j)));
+    		}
+    	}
+        frame1.repaint();
     }
     
     public static void main(String[] args) {

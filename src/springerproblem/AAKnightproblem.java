@@ -1,9 +1,9 @@
 package springerproblem;
 
-public class Knightproblem {
+public class AAKnightproblem {
 
 	public static void main(String[] args) {
-		System.out.println(new Knightproblem().new Solver().getResultField());
+		System.out.println(new AAKnightproblem().new Solver().getResultField());
 	}
 
 	class Solver {
